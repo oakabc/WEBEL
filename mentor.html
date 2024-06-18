@@ -52,6 +52,11 @@
         }
         .comment-section {
             margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        .comment-box {
+            flex: 2;
         }
         .comment-section textarea {
             width: 100%;
@@ -100,6 +105,39 @@
             border-radius: 4px;
             background-color: #E7F1FF;
             color: #007BFF;
+        }
+        .teacher-guide {
+            max-width: 300px;
+        }
+        .teacher-guide ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .teacher-guide ul li {
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .teacher-guide ul li.ce {
+            background-color: #E7F1FF;
+            border: 1px solid #007BFF;
+        }
+        .teacher-guide ul li.ro {
+            background-color: #FFF3E6;
+            border: 1px solid #FFA500;
+        }
+        .teacher-guide ul li.ac {
+            background-color: #E6FFED;
+            border: 1px solid #28A745;
+        }
+        .teacher-guide ul li.ae {
+            background-color: #FFF3F3;
+            border: 1px solid #DC3545;
+        }
+        .teacher-guide ul li.connection {
+            background-color: #F0E68C;
+            border: 1px solid #FFD700;
         }
     </style>
 </head>
@@ -171,12 +209,32 @@
     </div>
 
     <div class="comment-section">
-        <h3>Teacher's Comments
-            <span class="hint-icon" onclick="toggleHint('comment-hint')">?</span>
-            <div id="comment-hint" class="hint-text">Provide constructive feedback on the student's reflective writing. Comment on their use of the experiential learning cycle and offer suggestions for improvement.</div>
-        </h3>
-        <textarea id="teacher-comments"></textarea>
-        <button class="comment-button">Submit Comment</button>
+        <div class="teacher-guide">
+            <h3>Feedback Guide
+                <span class="hint-icon" onclick="toggleHint('guide-hint')">?</span>
+                <div id="guide-hint" class="hint-text">Use the following sentence openers to provide constructive feedback based on Kolb's Experiential Learning:</div>
+            </h3>
+            <ul>
+                <li class="ce" onclick="appendComment('It seems that you experienced...')">It seems that you experienced...</li>
+                <li class="ce" onclick="appendComment('Your description of the event is clear and detailed...')">Your description of the event is clear and detailed...</li>
+                <li class="ro" onclick="appendComment('Reflecting on your experience, you observed...')">Reflecting on your experience, you observed...</li>
+                <li class="ro" onclick="appendComment('It's insightful that you noticed...')">It's insightful that you noticed...</li>
+                <li class="ac" onclick="appendComment('From this, you concluded that...')">From this, you concluded that...</li>
+                <li class="ac" onclick="appendComment('Your understanding that... is significant because...')">Your understanding that... is significant because...</li>
+                <li class="ae" onclick="appendComment('Planning to... next time shows growth...')">Planning to... next time shows growth...</li>
+                <li class="ae" onclick="appendComment('Your intention to apply this learning by... is a great step forward...')">Your intention to apply this learning by... is a great step forward...</li>
+                <li class="connection" onclick="appendComment('This experience reminds me of a similar situation where...')">This experience reminds me of a similar situation where...</li>
+                <li class="connection" onclick="appendComment('It's great to see how you\'ve applied your previous learning to this new context...')">It's great to see how you've applied your previous learning to this new context...</li>
+            </ul>
+        </div>
+        <div class="comment-box">
+            <h3>Teacher's Comments
+                <span class="hint-icon" onclick="toggleHint('comment-hint')">?</span>
+                <div id="comment-hint" class="hint-text">Provide constructive feedback on the student's reflective writing. Comment on their use of the experiential learning cycle and offer suggestions for improvement.</div>
+            </h3>
+            <textarea id="teacher-comments"></textarea>
+            <button class="comment-button">Submit Comment</button>
+        </div>
     </div>
 
     <div class="pagination">
@@ -378,6 +436,11 @@
     function toggleHint(hintId) {
         const hint = document.getElementById(hintId);
         hint.style.display = hint.style.display === 'none' || hint.style.display === '' ? 'block' : 'none';
+    }
+
+    function appendComment(comment) {
+        const textarea = document.getElementById('teacher-comments');
+        textarea.value += comment + " ";
     }
 </script>
 
