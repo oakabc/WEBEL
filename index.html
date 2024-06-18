@@ -108,9 +108,44 @@
             font-size: 16px;
             margin-top: 20px;
         }
+        .external-links {
+            margin-bottom: 20px;
+        }
+        .external-links a {
+            margin-right: 10px;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            background-color: #007BFF;
+            color: #fff;
+            font-size: 16px;
+        }
+        .hint-icon {
+            cursor: pointer;
+            margin-left: 5px;
+            color: #007BFF;
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        .hint-text {
+            display: none;
+            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #007BFF;
+            border-radius: 4px;
+            background-color: #E7F1FF;
+            color: #007BFF;
+        }
     </style>
 </head>
 <body>
+
+<div class="external-links">
+    <a href="mentor.html">Mentor</a>
+    <a href="history.html">History</a>
+    <a href="data.html">Data</a>
+    <a href="dashboard.html">Dashboard</a>
+</div>
 
 <div class="container">
     <h2>Sentence Openers for Reflective Writing</h2>
@@ -134,7 +169,10 @@
         </div>
         <div class="field-group">
             <div class="category ce">
-                <h3>Concrete Experience (CE)</h3>
+                <h3>Concrete Experience (CE)
+                    <span class="hint-icon" onclick="toggleHint('ce-hint')">?</span>
+                    <div id="ce-hint" class="hint-text">Concrete Experience (CE) involves describing the event or situation that you experienced.</div>
+                </h3>
                 <div class="sentence-opener" onclick="insertText('ce-textarea', 'I experienced...', this)">I experienced...</div>
                 <div class="sentence-opener" onclick="insertText('ce-textarea', 'During this event...', this)">During this event...</div>
                 <div class="sentence-opener" onclick="insertText('ce-textarea', 'I encountered a situation where...', this)">I encountered a situation where...</div>
@@ -151,7 +189,10 @@
         </div>
         <div class="field-group">
             <div class="category ro">
-                <h3>Reflective Observation (RO)</h3>
+                <h3>Reflective Observation (RO)
+                    <span class="hint-icon" onclick="toggleHint('ro-hint')">?</span>
+                    <div id="ro-hint" class="hint-text">Reflective Observation (RO) involves reflecting on the experience and noting what you observed or realized.</div>
+                </h3>
                 <div class="sentence-opener" onclick="insertText('ro-textarea', 'Upon reflecting on the experience, I noticed...', this)">Upon reflecting on the experience, I noticed...</div>
                 <div class="sentence-opener" onclick="insertText('ro-textarea', 'I observed that...', this)">I observed that...</div>
                 <div class="sentence-opener" onclick="insertText('ro-textarea', 'It made me think about...', this)">It made me think about...</div>
@@ -168,7 +209,10 @@
         </div>
         <div class="field-group">
             <div class="category ac">
-                <h3>Abstract Conceptualization (AC)</h3>
+                <h3>Abstract Conceptualization (AC)
+                    <span class="hint-icon" onclick="toggleHint('ac-hint')">?</span>
+                    <div id="ac-hint" class="hint-text">Abstract Conceptualization (AC) involves drawing conclusions and learning from the experience.</div>
+                </h3>
                 <div class="sentence-opener" onclick="insertText('ac-textarea', 'From this experience, I learned that...', this)">From this experience, I learned that...</div>
                 <div class="sentence-opener" onclick="insertText('ac-textarea', 'I understood that...', this)">I understood that...</div>
                 <div class="sentence-opener" onclick="insertText('ac-textarea', 'This experience made me realize...', this)">This experience made me realize...</div>
@@ -185,7 +229,10 @@
         </div>
         <div class="field-group">
             <div class="category ae">
-                <h3>Active Experimentation (AE)</h3>
+                <h3>Active Experimentation (AE)
+                    <span class="hint-icon" onclick="toggleHint('ae-hint')">?</span>
+                    <div id="ae-hint" class="hint-text">Active Experimentation (AE) involves planning how you will apply what you have learned in the future.</div>
+                </h3>
                 <div class="sentence-opener" onclick="insertText('ae-textarea', 'Next time, I plan to...', this)">Next time, I plan to...</div>
                 <div class="sentence-opener" onclick="insertText('ae-textarea', 'I will apply this learning by...', this)">I will apply this learning by...</div>
                 <div class="sentence-opener" onclick="insertText('ae-textarea', 'In future situations, I will...', this)">In future situations, I will...</div>
@@ -238,6 +285,11 @@
                 insertText(fieldId, this.innerText, this);
             };
         });
+    }
+
+    function toggleHint(hintId) {
+        const hint = document.getElementById(hintId);
+        hint.style.display = hint.style.display === 'none' || hint.style.display === '' ? 'block' : 'none';
     }
 </script>
 
