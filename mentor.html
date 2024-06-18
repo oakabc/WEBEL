@@ -85,6 +85,22 @@
             color: #fff;
             font-size: 16px;
         }
+        .hint-icon {
+            cursor: pointer;
+            margin-left: 5px;
+            color: #007BFF;
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        .hint-text {
+            display: none;
+            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #007BFF;
+            border-radius: 4px;
+            background-color: #E7F1FF;
+            color: #007BFF;
+        }
     </style>
 </head>
 <body>
@@ -99,42 +115,66 @@
 
     <div class="chart-container">
         <div class="chart-box">
-            <h3>Radar Chart</h3>
+            <h3>Radar Chart
+                <span class="hint-icon" onclick="toggleHint('radar-hint')">?</span>
+                <div id="radar-hint" class="hint-text">The Radar Chart shows the student's performance across different dimensions of experiential learning. It helps visualize strengths and areas for improvement.</div>
+            </h3>
             <canvas id="radarChart"></canvas>
         </div>
         <div class="chart-box">
-            <h3>Time Spent on Each Part (seconds)</h3>
+            <h3>Time Spent on Each Part (seconds)
+                <span class="hint-icon" onclick="toggleHint('time-hint')">?</span>
+                <div id="time-hint" class="hint-text">This chart displays the time spent by the student on each part of the reflective writing (CE, RO, AC, AE). It helps assess the balance and focus of their reflection.</div>
+            </h3>
             <canvas id="barChart"></canvas>
         </div>
     </div>
 
     <div class="chart-box">
-        <h3>Learner Behavioral Pattern (LBP)</h3>
+        <h3>Learner Behavioral Pattern (LBP)
+            <span class="hint-icon" onclick="toggleHint('lbp-hint')">?</span>
+            <div id="lbp-hint" class="hint-text">The Learner Behavioral Pattern (LBP) chart shows how the student spent their time during reflective writing, highlighting segments where sentence openers were used.</div>
+        </h3>
         <canvas id="lbpChart"></canvas>
     </div>
 
     <div class="sample-texts">
         <h3>Sample Texts</h3>
         <div class="sample-text">
-            <h4>Concrete Experience (CE)</h4>
+            <h4>Concrete Experience (CE)
+                <span class="hint-icon" onclick="toggleHint('ce-hint')">?</span>
+                <div id="ce-hint" class="hint-text">Concrete Experience (CE) involves describing the event or situation that the student experienced.</div>
+            </h4>
             <p id="ce-text">I experienced a challenging situation where I had to lead a team project under a tight deadline. The experience taught me a lot about time management and team coordination.</p>
         </div>
         <div class="sample-text">
-            <h4>Reflective Observation (RO)</h4>
+            <h4>Reflective Observation (RO)
+                <span class="hint-icon" onclick="toggleHint('ro-hint')">?</span>
+                <div id="ro-hint" class="hint-text">Reflective Observation (RO) involves reflecting on the experience and noting what the student observed or realized.</div>
+            </h4>
             <p id="ro-text">Upon reflecting on the experience, I noticed how crucial it was to have clear communication and defined roles within the team. This realization helped us complete the project successfully.</p>
         </div>
         <div class="sample-text">
-            <h4>Abstract Conceptualization (AC)</h4>
+            <h4>Abstract Conceptualization (AC)
+                <span class="hint-icon" onclick="toggleHint('ac-hint')">?</span>
+                <div id="ac-hint" class="hint-text">Abstract Conceptualization (AC) involves drawing conclusions and learning from the experience.</div>
+            </h4>
             <p id="ac-text">From this experience, I learned that effective leadership involves not just delegating tasks but also motivating and supporting team members throughout the process.</p>
         </div>
         <div class="sample-text">
-            <h4>Active Experimentation (AE)</h4>
+            <h4>Active Experimentation (AE)
+                <span class="hint-icon" onclick="toggleHint('ae-hint')">?</span>
+                <div id="ae-hint" class="hint-text">Active Experimentation (AE) involves planning how the student will apply what they have learned in future situations.</div>
+            </h4>
             <p id="ae-text">Next time, I plan to implement regular check-ins and progress updates to ensure everyone is on track and to address any issues promptly. This approach will help in maintaining the momentum of the project.</p>
         </div>
     </div>
 
     <div class="comment-section">
-        <h3>Teacher's Comments</h3>
+        <h3>Teacher's Comments
+            <span class="hint-icon" onclick="toggleHint('comment-hint')">?</span>
+            <div id="comment-hint" class="hint-text">Provide constructive feedback on the student's reflective writing. Comment on their use of the experiential learning cycle and offer suggestions for improvement.</div>
+        </h3>
         <textarea id="teacher-comments"></textarea>
         <button class="comment-button">Submit Comment</button>
     </div>
@@ -334,6 +374,11 @@
 
         loadWeekData(currentWeekIndex);
     };
+
+    function toggleHint(hintId) {
+        const hint = document.getElementById(hintId);
+        hint.style.display = hint.style.display === 'none' || hint.style.display === '' ? 'block' : 'none';
+    }
 </script>
 
 </body>
