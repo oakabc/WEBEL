@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher's Interface - Reflective Writing Assessment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h2 {
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+        .student-info {
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .chart-box {
+            flex: 1;
+            min-width: 300px;
+        }
+        canvas {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .sample-texts {
+            margin-top: 20px;
+        }
+        .sample-texts h3 {
+            color: #007BFF;
+            margin-bottom: 10px;
+        }
+        .sample-text {
+            margin-bottom: 20px;
+        }
+        .comment-section {
+            margin-top: 20px;
+        }
+        .comment-section textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            height: 100px;
+        }
+        .comment-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: #fff;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .pagination button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: #fff;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Reflective Writing Assessment</h2>
+
+    <div class="student-info">
+        <p><strong>Student Name:</strong> John Doe</p>
+        <p><strong>Date of Submission:</strong> <span id="submission-date">2024-06-18</span></p>
+    </div>
+
+    <div class="chart-container">
+        <div class="chart-box">
+            <h3>Radar Chart</h3>
+            <canvas id="radarChart"></canvas>
+        </div>
+        <div class="chart-box">
+            <h3>Time Spent on Each Part (seconds)</h3>
+            <canvas id="barChart"></canvas>
+        </div>
+    </div>
+
+    <div class="sample-texts">
+        <h3>Sample Texts</h3>
+        <div class="sample-text">
+            <h4>Concrete Experience (CE)</h4>
+            <p id="ce-text">I experienced a challenging situation where I had to lead a team project under a tight deadline. The experience taught me a lot about time management and team coordination.</p>
+        </div>
+        <div class="sample-text">
+            <h4>Reflective Observation (RO)</h4>
+            <p id="ro-text">Upon reflecting on the experience, I noticed how crucial it was to have clear communication and defined roles within the team. This realization helped us complete the project successfully.</p>
+        </div>
+        <div class="sample-text">
+            <h4>Abstract Conceptualization (AC)</h4>
+            <p id="ac-text">From this experience, I learned that effective leadership involves not just delegating tasks but also motivating and supporting team members throughout the process.</p>
+        </div>
+        <div class="sample-text">
+            <h4>Active Experimentation (AE)</h4>
+            <p id="ae-text">Next time, I plan to implement regular check-ins and progress updates to ensure everyone is on track and to address any issues promptly. This approach will help in maintaining the momentum of the project.</p>
+        </div>
+    </div>
+
+    <div class="comment-section">
+        <h3>Teacher's Comments</h3>
+        <textarea id="teacher-comments"></textarea>
+        <button class="comment-button">Submit Comment</button>
+    </div>
+
+    <div class="pagination">
+        <button onclick="previousWeek()">Previous Week</button>
+        <button onclick="nextWeek()">Next Week</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const weeks = [
+        {
+            date: '2024-06-18',
+            ce: 'I experienced a challenging situation where I had to lead a team project under a tight deadline. The experience taught me a lot about time management and team coordination.',
+            ro: 'Upon reflecting on the experience, I noticed how crucial it was to have clear communication and defined roles within the team. This realization helped us complete the project successfully.',
+            ac: 'From this experience, I learned that effective leadership involves not just delegating tasks but also motivating and supporting team members throughout the process.',
+            ae: 'Next time, I plan to implement regular check-ins and progress updates to ensure everyone is on track and to address any issues promptly. This approach will help in maintaining the momentum of the project.',
+            radarData: [3, 4, 2, 5, 4],
+            barData: [1800, 1500, 1200, 2100]
+        },
+        {
+            date: '2024-06-11',
+            ce: 'I participated in a workshop about effective communication. It was a hands-on session where we practiced various techniques.',
+            ro: 'Reflecting on the workshop, I realized how often I overlook the importance of active listening.',
+            ac: 'I understood that communication is not just about speaking but also about listening and understanding the other person’s perspective.',
+            ae: 'In future conversations, I will focus more on active listening and providing feedback.',
+            radarData: [4, 3, 4, 3, 5],
+            barData: [1500, 1300, 1100, 1600]
+        },
+        // Add more weeks as needed
+    ];
+
+    let currentWeekIndex = 0;
+
+    function loadWeekData(index) {
+        const week = weeks[index];
+        document.getElementById('submission-date').innerText = week.date;
+        document.getElementById('ce-text').innerText = week.ce;
+        document.getElementById('ro-text').innerText = week.ro;
+        document.getElementById('ac-text').innerText = week.ac;
+        document.getElementById('ae-text').innerText = week.ae;
+
+        radarChart.data.datasets[0].data = week.radarData;
+        radarChart.update();
+
+        barChart.data.datasets[0].data = week.barData;
+        barChart.update();
+    }
+
+    function previousWeek() {
+        if (currentWeekIndex > 0) {
+            currentWeekIndex--;
+            loadWeekData(currentWeekIndex);
+        }
+    }
+
+    function nextWeek() {
+        if (currentWeekIndex < weeks.length - 1) {
+            currentWeekIndex++;
+            loadWeekData(currentWeekIndex);
+        }
+    }
+
+    // Sample data for radar chart
+    const radarData = {
+        labels: ['Recursion', 'Connection of EL processes', 'Class Engagement', 'Abstraction', 'Verbalization of EL process'],
+        datasets: [{
+            label: 'Student Performance',
+            data: weeks[currentWeekIndex].radarData,
+            backgroundColor: 'rgba(0, 123, 255, 0.2)',
+            borderColor: 'rgba(0, 123, 255, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    const radarConfig = {
+        type: 'radar',
+        data: radarData,
+        options: {
+            scale: {
+                ticks: { beginAtZero: true, max: 5 }
+            }
+        }
+    };
+
+    // Sample data for bar chart
+    const barData = {
+        labels: ['CE', 'RO', 'AC', 'AE'],
+        datasets: [{
+            label: 'Time Spent (seconds)',
+            data: weeks[currentWeekIndex].barData,
+            backgroundColor: [
+                '#E7F1FF',
+                '#FFF3E6',
+                '#E6FFED',
+                '#FFF3F3'
+            ],
+            borderColor: [
+                '#007BFF',
+                '#FFA500',
+                '#28A745',
+                '#DC3545'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    const barConfig = {
+        type: 'bar',
+        data: barData,
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    };
+
+    window.onload = function() {
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        window.radarChart = new Chart(radarCtx, radarConfig);
+        window.barChart = new Chart(barCtx, barConfig);
+
+        loadWeekData(currentWeekIndex);
+    };
+</script>
+
+</body>
+</html>

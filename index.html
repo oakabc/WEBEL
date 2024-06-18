@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentence Openers for Reflective Writing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h2 {
+            color: #007BFF;
+        }
+        .student-info {
+            margin-bottom: 20px;
+        }
+        .text-field-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .field-group {
+            display: flex;
+            gap: 20px;
+        }
+        .category, .text-field {
+            flex: 1;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        textarea, input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="text"], select {
+            height: auto;
+        }
+        .ce textarea {
+            border-color: #007BFF;
+            background-color: #E7F1FF;
+        }
+        .ro textarea {
+            border-color: #FFA500;
+            background-color: #FFF3E6;
+        }
+        .ac textarea {
+            border-color: #28A745;
+            background-color: #E6FFED;
+        }
+        .ae textarea {
+            border-color: #DC3545;
+            background-color: #FFF3F3;
+        }
+        .sentence-opener {
+            cursor: pointer;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+        }
+        .sentence-opener:hover {
+            opacity: 0.9;
+        }
+        .sentence-opener.disabled {
+            background-color: #d3d3d3;
+            cursor: not-allowed;
+        }
+        .ce .sentence-opener {
+            background-color: #E7F1FF;
+            border-color: #007BFF;
+        }
+        .ro .sentence-opener {
+            background-color: #FFF3E6;
+            border-color: #FFA500;
+        }
+        .ac .sentence-opener {
+            background-color: #E6FFED;
+            border-color: #28A745;
+        }
+        .ae .sentence-opener {
+            background-color: #FFF3F3;
+            border-color: #DC3545;
+        }
+        .submit-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: #fff;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Sentence Openers for Reflective Writing</h2>
+    
+    <div class="student-info">
+        <p><strong>Student Name:</strong> John Doe</p>
+        <p><strong>Date:</strong> June 18, 2024</p>
+        <p><strong>Week:</strong> 3</p>
+    </div>
+
+    <div class="text-field-container">
+        <div class="text-field">
+            <label for="past-experiences">Select Past Experience:</label>
+            <select id="past-experiences" onchange="handleExperienceChange()" style="max-width: 100%;">
+                <option value="workshop">I participated in a workshop about effective communication.</option>
+                <option value="team_project">I experienced a challenging situation where I had to lead a team project under a tight deadline.</option>
+                <option value="presentation">I gave a presentation to a large audience for the first time.</option>
+                <option value="new_experience">New Experience</option>
+            </select>
+            <input type="text" id="new-experience-input" style="display: none; margin-top: 10px;" placeholder="Describe your new experience...">
+        </div>
+        <div class="field-group">
+            <div class="category ce">
+                <h3>Concrete Experience (CE)</h3>
+                <div class="sentence-opener" onclick="insertText('ce-textarea', 'I experienced...', this)">I experienced...</div>
+                <div class="sentence-opener" onclick="insertText('ce-textarea', 'During this event...', this)">During this event...</div>
+                <div class="sentence-opener" onclick="insertText('ce-textarea', 'I encountered a situation where...', this)">I encountered a situation where...</div>
+                <div class="sentence-opener" onclick="insertText('ce-textarea', 'An instance that stood out to me was when...', this)">An instance that stood out to me was when...</div>
+                <div class="sentence-opener" onclick="insertText('ce-textarea', 'I participated in...', this)">I participated in...</div>
+                <div class="sentence-opener" onclick="insertText('ce-textarea', 'I felt...', this)">I felt...</div>
+                <div class="sentence-opener" onclick="insertText('ce-textarea', 'The experience that made an impact on me was...', this)">The experience that made an impact on me was...</div>
+            </div>
+            <div class="text-field ce">
+                <label for="ce-textarea">Concrete Experience (CE):</label>
+                <textarea id="ce-textarea" class="input-field"></textarea>
+                <button class="delete-button" style="display:none;" onclick="clearTextarea('ce-textarea', 'ce')">Delete</button>
+            </div>
+        </div>
+        <div class="field-group">
+            <div class="category ro">
+                <h3>Reflective Observation (RO)</h3>
+                <div class="sentence-opener" onclick="insertText('ro-textarea', 'Upon reflecting on the experience, I noticed...', this)">Upon reflecting on the experience, I noticed...</div>
+                <div class="sentence-opener" onclick="insertText('ro-textarea', 'I observed that...', this)">I observed that...</div>
+                <div class="sentence-opener" onclick="insertText('ro-textarea', 'It made me think about...', this)">It made me think about...</div>
+                <div class="sentence-opener" onclick="insertText('ro-textarea', 'One thing I realized was...', this)">One thing I realized was...</div>
+                <div class="sentence-opener" onclick="insertText('ro-textarea', 'I was surprised by...', this)">I was surprised by...</div>
+                <div class="sentence-opener" onclick="insertText('ro-textarea', 'In retrospect, I see that...', this)">In retrospect, I see that...</div>
+                <div class="sentence-opener" onclick="insertText('ro-textarea', 'I noticed that my reaction to...', this)">I noticed that my reaction to...</div>
+            </div>
+            <div class="text-field ro">
+                <label for="ro-textarea">Reflective Observation (RO):</label>
+                <textarea id="ro-textarea" class="input-field"></textarea>
+                <button class="delete-button" style="display:none;" onclick="clearTextarea('ro-textarea', 'ro')">Delete</button>
+            </div>
+        </div>
+        <div class="field-group">
+            <div class="category ac">
+                <h3>Abstract Conceptualization (AC)</h3>
+                <div class="sentence-opener" onclick="insertText('ac-textarea', 'From this experience, I learned that...', this)">From this experience, I learned that...</div>
+                <div class="sentence-opener" onclick="insertText('ac-textarea', 'I understood that...', this)">I understood that...</div>
+                <div class="sentence-opener" onclick="insertText('ac-textarea', 'This experience made me realize...', this)">This experience made me realize...</div>
+                <div class="sentence-opener" onclick="insertText('ac-textarea', 'I drew connections between...', this)">I drew connections between...</div>
+                <div class="sentence-opener" onclick="insertText('ac-textarea', 'A key takeaway from this was...', this)">A key takeaway from this was...</div>
+                <div class="sentence-opener" onclick="insertText('ac-textarea', 'I developed a theory that...', this)">I developed a theory that...</div>
+                <div class="sentence-opener" onclick="insertText('ac-textarea', 'This led me to conclude that...', this)">This led me to conclude that...</div>
+            </div>
+            <div class="text-field ac">
+                <label for="ac-textarea">Abstract Conceptualization (AC):</label>
+                <textarea id="ac-textarea" class="input-field"></textarea>
+                <button class="delete-button" style="display:none;" onclick="clearTextarea('ac-textarea', 'ac')">Delete</button>
+            </div>
+        </div>
+        <div class="field-group">
+            <div class="category ae">
+                <h3>Active Experimentation (AE)</h3>
+                <div class="sentence-opener" onclick="insertText('ae-textarea', 'Next time, I plan to...', this)">Next time, I plan to...</div>
+                <div class="sentence-opener" onclick="insertText('ae-textarea', 'I will apply this learning by...', this)">I will apply this learning by...</div>
+                <div class="sentence-opener" onclick="insertText('ae-textarea', 'In future situations, I will...', this)">In future situations, I will...</div>
+                <div class="sentence-opener" onclick="insertText('ae-textarea', 'I intend to improve by...', this)">I intend to improve by...</div>
+                <div class="sentence-opener" onclick="insertText('ae-textarea', 'I will experiment with...', this)">I will experiment with...</div>
+                <div class="sentence-opener" onclick="insertText('ae-textarea', 'To enhance my skills, I will...', this)">To enhance my skills, I will...</div>
+                <div class="sentence-opener" onclick="insertText('ae-textarea', 'Based on this experience, my next step is...', this)">Based on this experience, my next step is...</div>
+            </div>
+            <div class="text-field ae">
+                <label for="ae-textarea">Active Experimentation (AE):</label>
+                <textarea id="ae-textarea" class="input-field"></textarea>
+                <button class="delete-button" style="display:none;" onclick="clearTextarea('ae-textarea', 'ae')">Delete</button>
+            </div>
+        </div>
+        <button class="submit-button">Submit</button>
+    </div>
+</div>
+
+<script>
+    function handleExperienceChange() {
+        const experienceSelect = document.getElementById('past-experiences');
+        const newExperienceInput = document.getElementById('new-experience-input');
+        if (experienceSelect.value === 'new_experience') {
+            newExperienceInput.style.display = 'block';
+        } else {
+            newExperienceInput.style.display = 'none';
+        }
+    }
+
+    function insertText(fieldId, text, element) {
+        const textarea = document.getElementById(fieldId);
+        textarea.value = text;
+        element.classList.add('disabled');
+        element.style.backgroundColor = '#d3d3d3';
+        element.onclick = null;
+        const deleteButton = textarea.nextElementSibling;
+        deleteButton.style.display = 'block';
+    }
+
+    function clearTextarea(fieldId, category) {
+        const textarea = document.getElementById(fieldId);
+        textarea.value = '';
+        const deleteButton = textarea.nextElementSibling;
+        deleteButton.style.display = 'none';
+        const openers = document.querySelectorAll(`.${category} .sentence-opener`);
+        openers.forEach(opener => {
+            opener.classList.remove('disabled');
+            opener.style.backgroundColor = '';
+            opener.onclick = function() {
+                insertText(fieldId, this.innerText, this);
+            };
+        });
+    }
+</script>
+
+</body>
+</html>
