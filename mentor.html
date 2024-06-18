@@ -158,10 +158,10 @@
             radarSelfEval: [4, 3, 3, 4, 5],
             barData: [1800, 1500, 1200, 2100],
             lbpSegments: [
-                { label: 'CE', time: 5, opener: true },
-                { label: 'RO', time: 3, opener: false },
-                { label: 'AC', time: 4, opener: true },
-                { label: 'AE', time: 3, opener: false }
+                { label: 'CE', time: 10, opener: true },
+                { label: 'RO', time: 15, opener: false },
+                { label: 'AC', time: 20, opener: true },
+                { label: 'AE', time: 5, opener: false }
             ]
         },
         {
@@ -174,10 +174,10 @@
             radarSelfEval: [3, 4, 3, 4, 4],
             barData: [1500, 1300, 1100, 1600],
             lbpSegments: [
-                { label: 'AC', time: 5, opener: true },
-                { label: 'CE', time: 4, opener: false },
-                { label: 'RO', time: 6, opener: true },
-                { label: 'AE', time: 2, opener: false }
+                { label: 'AC', time: 12, opener: true },
+                { label: 'CE', time: 8, opener: false },
+                { label: 'RO', time: 10, opener: true },
+                { label: 'AE', time: 10, opener: false }
             ]
         },
         // Add more weeks as needed
@@ -200,9 +200,14 @@
         barChart.data.datasets[0].data = week.barData;
         barChart.update();
 
-        lbpChart.data.labels = week.lbpSegments.map(segment => segment.label);
-        lbpChart.data.datasets[0].data = week.lbpSegments.map(segment => segment.time);
-        lbpChart.data.datasets[0].backgroundColor = week.lbpSegments.map(segment => segment.opener ? 'rgba(0, 123, 255, 0.8)' : 'rgba(0, 123, 255, 0.3)');
+        lbpChart.data.labels = ['Time'];
+        lbpChart.data.datasets = week.lbpSegments.map(segment => ({
+            label: segment.label,
+            data: [segment.time],
+            backgroundColor: segment.opener ? getColor(segment.label, true) : getColor(segment.label, false),
+            borderColor: getColor(segment.label, true),
+            borderWidth: 1
+        }));
         lbpChart.update();
     }
 
@@ -218,6 +223,16 @@
             currentWeekIndex++;
             loadWeekData(currentWeekIndex);
         }
+    }
+
+    function getColor(label, opener) {
+        const colors = {
+            'CE': opener ? 'rgba(0, 123, 255, 0.8)' : 'rgba(0, 123, 255, 0.3)',
+            'RO': opener ? 'rgba(255, 193, 7, 0.8)' : 'rgba(255, 193, 7, 0.3)',
+            'AC': opener ? 'rgba(40, 167, 69, 0.8)' : 'rgba(40, 167, 69, 0.3)',
+            'AE': opener ? 'rgba(220, 53, 69, 0.8)' : 'rgba(220, 53, 69, 0.3)'
+        };
+        return colors[label];
     }
 
     // Sample data for radar chart
@@ -284,25 +299,23 @@
     };
 
     // Sample data for LBP chart
-    const lbpData = {
-        labels: weeks[currentWeekIndex].lbpSegments.map(segment => segment.label),
-        datasets: [{
-            label: 'Learner Behavioral Pattern (LBP)',
-            data: weeks[currentWeekIndex].lbpSegments.map(segment => segment.time),
-            backgroundColor: weeks[currentWeekIndex].lbpSegments.map(segment => segment.opener ? 'rgba(0, 123, 255, 0.8)' : 'rgba(0, 123, 255, 0.3)'),
-            borderColor: 'rgba(0, 123, 255, 1)',
-            borderWidth: 1
-        }]
-    };
-
     const lbpConfig = {
         type: 'bar',
-        data: lbpData,
+        data: {
+            labels: ['Time'],
+            datasets: []
+        },
         options: {
+            indexAxis: 'y',
             scales: {
                 x: {
+                    stacked: true,
                     beginAtZero: true,
-                    stacked: true
+                    ticks: {
+                        callback: function(value) {
+                            return value + ' s';
+                        }
+                    }
                 },
                 y: {
                     stacked: true
