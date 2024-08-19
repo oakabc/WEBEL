@@ -139,6 +139,98 @@
             background-color: #F0E68C;
             border: 1px solid #FFD700;
         }
+        .score-difference {
+        margin-top: 20px;
+        padding: 15px;
+        border: 2px solid #007BFF;
+        border-radius: 8px;
+        background-color: #F0F8FF;
+    }
+    .difference-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #FFFAFA;
+        border: 1px solid #FFB6C1;
+        border-radius: 4px;
+        flex-wrap: wrap;
+    }
+    .system-eval, .learner-eval {
+        flex: 1;
+        font-weight: bold;
+    }
+    .system-eval span, .learner-eval span {
+        font-size: 18px;
+        color: #007BFF;
+    }
+    .adjust-button {
+        margin-left: 10px;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        background-color: #DC3545;
+        color: #fff;
+    }
+    .adjust-input {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .submit-adjustment-button {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007BFF;
+        color: #fff;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    #new-abstraction-score, #new-connection-score {
+        width: 100px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .confirm-button, .adjust-button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .confirm-button {
+        background-color: #28A745;
+        color: #fff;
+        margin-right: 10px;
+    }
+    .adjust-comment {
+        margin-top: 20px;
+    }
+    #mentor-comment {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+    .submit-comment-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007BFF;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+    }
     </style>
 </head>
 <body>
@@ -155,7 +247,7 @@
         <div class="chart-box">
             <h3>Radar Chart
                 <span class="hint-icon" onclick="toggleHint('radar-hint')">?</span>
-                <div id="radar-hint" class="hint-text">The Radar Chart shows the student's performance across different dimensions of experiential learning. It helps visualize strengths and areas for improvement.</div>
+                <div id="radar-hint" class="hint-text">The Radar Chart shows the student's performance across different dimensions of experiential learning. It compares the system's evaluation with the learner's self-evaluation to identify any inconsistencies.</div>
             </h3>
             <canvas id="radarChart"></canvas>
         </div>
@@ -167,6 +259,48 @@
             <canvas id="barChart"></canvas>
         </div>
     </div>
+<!-- New Section for Score Difference and Actions -->
+<div id="score-difference" class="score-difference">
+    <h3>Score Differences Detected</h3>
+    
+    <!-- Abstraction Difference -->
+    <div class="difference-item">
+        <p><strong>Abstraction:</strong></p>
+        <p class="system-eval">System's Evaluation: <span id="system-abstraction-score">5</span></p>
+        <p class="learner-eval">Learner's Self-Evaluation: <span>3</span></p>
+        <button class="adjust-button" onclick="adjustAbstraction()">Adjust - Provide New System Score</button>
+        
+        <!-- Hidden Input Field for Adjusting Abstraction Score -->
+        <div id="adjust-abstraction" class="adjust-input" style="display: none;">
+            <input type="number" id="new-abstraction-score" min="1" max="5" placeholder="Enter new system score for Abstraction">
+            <button class="submit-adjustment-button" onclick="submitAbstractionAdjustment()">Submit New Score</button>
+        </div>
+    </div>
+
+    <!-- Connection of Experience Difference -->
+    <div class="difference-item">
+        <p><strong>Connection of Experience:</strong></p>
+        <p class="system-eval">System's Evaluation: <span id="system-connection-score">4</span></p>
+        <p class="learner-eval">Learner's Self-Evaluation: <span>2</span></p>
+        <button class="adjust-button" onclick="adjustConnection()">Adjust - Provide New System Score</button>
+        
+        <!-- Hidden Input Field for Adjusting Connection of Experience Score -->
+        <div id="adjust-connection" class="adjust-input" style="display: none;">
+            <input type="number" id="new-connection-score" min="1" max="5" placeholder="Enter new system score for Connection of Experience">
+            <button class="submit-adjustment-button" onclick="submitConnectionAdjustment()">Submit New Score</button>
+        </div>
+    </div>
+    
+    <p>Please review the inconsistencies and choose an action:</p>
+    <button class="confirm-button" onclick="confirmEvaluation()">Confirm - No Discussion Needed</button>
+    <button class="adjust-button" onclick="adjustEvaluation()">Adjust - Provide More Feedback</button>
+    
+    <!-- Hidden Comment Box initially, shown only when 'Adjust' is clicked -->
+    <div id="adjust-comment" class="adjust-comment" style="display: none;">
+        <textarea id="mentor-comment" placeholder="Please provide your feedback on the inconsistencies..."></textarea>
+        <button class="submit-comment-button" onclick="submitComment()">Submit Comment</button>
+    </div>
+</div>
 
     <div class="chart-box">
         <h3>Learner Behavioral Pattern (LBP)
@@ -215,18 +349,136 @@
                 <div id="guide-hint" class="hint-text">Use the following sentence openers to provide constructive feedback based on Kolb's Experiential Learning:</div>
             </h3>
             <ul>
-                <li class="ce" onclick="appendComment('It seems that you experienced...')">It seems that you experienced...</li>
-                <li class="ce" onclick="appendComment('Your description of the event is clear and detailed...')">Your description of the event is clear and detailed...</li>
-                <li class="ro" onclick="appendComment('Reflecting on your experience, you observed...')">Reflecting on your experience, you observed...</li>
-                <li class="ro" onclick="appendComment('Its insightful that you noticed...')">It's insightful that you noticed...</li>
-                <li class="ac" onclick="appendComment('From this, you concluded that...')">From this, you concluded that...</li>
-                <li class="ac" onclick="appendComment('Your understanding that... is significant because...')">Your understanding that... is significant because...</li>
-                <li class="ae" onclick="appendComment('Planning to... next time shows growth...')">Planning to... next time shows growth...</li>
-                <li class="ae" onclick="appendComment('Your intention to apply this learning by... is a great step forward...')">Your intention to apply this learning by... is a great step forward...</li>
-                <li class="connection" onclick="appendComment('This experience reminds me of a similar situation where...')">This experience reminds me of a similar situation where...</li>
-                <li class="connection" onclick="appendComment('Its great to see how you\'ve applied your previous learning to this new context...')">It's great to see how you've applied your previous learning to this new context...</li>
+                <!-- Initial Encouragement -->
+                <li class="encouragement" style="background-color: #DFF2BF;"><strong>Encouragement</strong></li>
+                <ul>
+                    <li style="color: green;" onclick="appendComment('Great job on starting your reflective writing journey! Your effort in exploring your experiences is commendable.')">Great job on starting your reflective writing journey! Your effort in exploring your experiences is commendable.</li>
+                    <li style="color: green;" onclick="appendComment('You’re on the right path with your reflection, keep up the good work!')">You’re on the right path with your reflection, keep up the good work!</li>
+                </ul>
+        
+                <!-- EL Cycle -->
+                <li class="el-cycle" style="background-color: #FFEB9C;"><strong>EL Cycle</strong></li>
+                <ul>
+                    <!-- Recursive Category -->
+                    <li class="recursive" style="background-color: #E7F1FF;"><strong>Recursive</strong></li>
+                    <ul>
+                        <li style="color: green;" onclick="appendComment('You have effectively applied previous experiences to enhance your current reflection, which demonstrates strong recursive learning.')">You have effectively applied previous experiences to enhance your current reflection, which demonstrates strong recursive learning.</li>
+                        <li style="color: green;" onclick="appendComment('Your ability to draw from past experiences to inform your current actions is commendable and shows deep understanding.')">Your ability to draw from past experiences to inform your current actions is commendable and shows deep understanding.</li>
+                        <li style="color: red;" onclick="appendComment('There seems to be a lack of connection to previous experiences in your reflection, which could have strengthened your learning process.')">There seems to be a lack of connection to previous experiences in your reflection, which could have strengthened your learning process.</li>
+                        <li style="color: red;" onclick="appendComment('You missed an opportunity to reference past learning that could have provided valuable insights into the current situation.')">You missed an opportunity to reference past learning that could have provided valuable insights into the current situation.</li>
+                        <li style="color: blue;" onclick="appendComment('Consider how your past experiences can further inform your current reflections. You have the potential to deepen your understanding.')">Consider how your past experiences can further inform your current reflections. You have the potential to deepen your understanding.</li>
+                    </ul>
+        
+                    <!-- CE Category -->
+                    <li class="ce" style="background-color: #FFEB9C;"><strong>Concrete Experience (CE)</strong></li>
+                    <ul>
+                        <li style="color: green;" onclick="appendComment('Your description of the event is vivid and detailed, allowing for a clear understanding of the experience.')">Your description of the event is vivid and detailed, allowing for a clear understanding of the experience.</li>
+                        <li style="color: green;" onclick="appendComment('You provided a thorough account of the situation, which sets a solid foundation for your reflection.')">You provided a thorough account of the situation, which sets a solid foundation for your reflection.</li>
+                        <li style="color: red;" onclick="appendComment('The description of your experience lacks specific details, making it difficult to fully grasp the situation.')">The description of your experience lacks specific details, making it difficult to fully grasp the situation.</li>
+                        <li style="color: red;" onclick="appendComment('Your recount of the event is somewhat vague, which may hinder the depth of your reflection.')">Your recount of the event is somewhat vague, which may hinder the depth of your reflection.</li>
+                        <li style="color: blue;" onclick="appendComment('You’re off to a great start! Consider adding more specific details to paint a clearer picture of your experience.')">You’re off to a great start! Consider adding more specific details to paint a clearer picture of your experience.</li>
+                    </ul>
+        
+                    <!-- RO Category -->
+                    <li class="ro" style="background-color: #FFCCCB;"><strong>Reflective Observation (RO)</strong></li>
+                    <ul>
+                        <li style="color: green;" onclick="appendComment('Your reflection provides deep insights into what you observed during the experience, showing critical thinking.')">Your reflection provides deep insights into what you observed during the experience, showing critical thinking.</li>
+                        <li style="color: green;" onclick="appendComment('You have thoughtfully analyzed the experience, which adds significant value to your reflection.')">You have thoughtfully analyzed the experience, which adds significant value to your reflection.</li>
+                        <li style="color: red;" onclick="appendComment('Your reflection could benefit from more analysis and observation of the situation.')">Your reflection could benefit from more analysis and observation of the situation.</li>
+                        <li style="color: red;" onclick="appendComment('There is room to explore your observations further, which could lead to deeper insights.')">There is room to explore your observations further, which could lead to deeper insights.</li>
+                        <li style="color: blue;" onclick="appendComment('You’ve made some good observations here. Try to dig a bit deeper to uncover more insights from your experience.')">You’ve made some good observations here. Try to dig a bit deeper to uncover more insights from your experience.</li>
+                    </ul>
+        
+                    <!-- AC Category -->
+                    <li class="ac" style="background-color: #DFF2BF;"><strong>Abstract Conceptualization (AC)</strong></li>
+                    <ul>
+                        <li style="color: green;" onclick="appendComment('You have successfully abstracted key lessons from the experience, which shows a solid understanding.')">You have successfully abstracted key lessons from the experience, which shows a solid understanding.</li>
+                        <li style="color: green;" onclick="appendComment('Your ability to generalize from the experience to broader principles is impressive.')">Your ability to generalize from the experience to broader principles is impressive.</li>
+                        <li style="color: red;" onclick="appendComment('The abstract conclusions drawn from your experience seem superficial and could be further developed.')">The abstract conclusions drawn from your experience seem superficial and could be further developed.</li>
+                        <li style="color: red;" onclick="appendComment('Your conclusions lack depth and may benefit from more thorough analysis.')">Your conclusions lack depth and may benefit from more thorough analysis.</li>
+                        <li style="color: blue;" onclick="appendComment('You’ve identified some important lessons. Take some time to explore how these lessons might apply to different situations.')">You’ve identified some important lessons. Take some time to explore how these lessons might apply to different situations.</li>
+                    </ul>
+                </ul>
+
+                <!-- AE Category -->
+                <li class="ae" style="background-color: #FFEB9C;">
+                    <strong>Active Experimentation (AE)</strong>
+                    <ul>
+                        <li style="color: green;" onclick="appendComment('Your plan for applying the lessons learned is practical and well-thought-out, indicating readiness for future challenges.')">Your plan for applying the lessons learned is practical and well-thought-out, indicating readiness for future challenges.</li>
+                        <li style="color: green;" onclick="appendComment('You have clearly articulated how you will implement your new understanding in future situations.')">You have clearly articulated how you will implement your new understanding in future situations.</li>
+                        <li style="color: red;" onclick="appendComment('The plan for applying what you have learned lacks specificity and could be more actionable.')">The plan for applying what you have learned lacks specificity and could be more actionable.</li>
+                        <li style="color: red;" onclick="appendComment('Your action plan is somewhat vague, making it difficult to see how you will apply your learning.')">Your action plan is somewhat vague, making it difficult to see how you will apply your learning.</li>
+                        <li style="color: blue;" onclick="appendComment('Your ideas for applying what you’ve learned are promising. Consider making them more specific to ensure success.')">Your ideas for applying what you’ve learned are promising. Consider making them more specific to ensure success.</li>
+                    </ul>
+                </li>
+
+                <!-- Connection of Experience Category -->
+                <li class="connection" style="background-color: #FFCCCB;">
+                    <strong>Connection of Experience</strong>
+                    <ul>
+                        <li style="color: green;" onclick="appendComment('You have made a strong connection between past experiences and the current situation, which enriches your learning.')">You have made a strong connection between past experiences and the current situation, which enriches your learning.</li>
+                        <li style="color: green;" onclick="appendComment('Your reflection demonstrates an excellent ability to integrate previous experiences with new learning.')">Your reflection demonstrates an excellent ability to integrate previous experiences with new learning.</li>
+                        <li style="color: red;" onclick="appendComment('There is an opportunity to better connect your past experiences to the current reflection, which could deepen your understanding.')">There is an opportunity to better connect your past experiences to the current reflection, which could deepen your understanding.</li>
+                        <li style="color: red;" onclick="appendComment('Your reflection could benefit from more explicit connections to your previous learning experiences.')">Your reflection could benefit from more explicit connections to your previous learning experiences.</li>
+                        <li style="color: blue;" onclick="appendComment('You’ve made some great connections. Try to think of other past experiences that might also relate to your current reflection.')">You’ve made some great connections. Try to think of other past experiences that might also relate to your current reflection.</li>
+                    </ul>
+                </li>
+
+                <!-- Linkage: CE to RO Category -->
+                <li class="ce-ro" style="background-color: #DFF2BF;">
+                    <strong>Linkage: CE to RO</strong>
+                    <ul>
+                        <li style="color: green;" onclick="appendComment('Your reflection smoothly transitions from describing the experience (CE) to observing its impact (RO), which enhances clarity.')">Your reflection smoothly transitions from describing the experience (CE) to observing its impact (RO), which enhances clarity.</li>
+                        <li style="color: green;" onclick="appendComment('You have effectively linked your experience (CE) to your observations (RO), creating a cohesive narrative.')">You have effectively linked your experience (CE) to your observations (RO), creating a cohesive narrative.</li>
+                        <li style="color: red;" onclick="appendComment('The linkage between your experience (CE) and observation (RO) could be clearer to strengthen the reflection.')">The linkage between your experience (CE) and observation (RO) could be clearer to strengthen the reflection.</li>
+                        <li style="color: red;" onclick="appendComment('Your transition from describing the experience (CE) to observing its impact (RO) feels abrupt and could be more seamless.')">Your transition from describing the experience (CE) to observing its impact (RO) feels abrupt and could be more seamless.</li>
+                        <li style="color: blue;" onclick="appendComment('You’re making good progress in linking your experiences to your observations. Consider how you can make these connections even clearer.')">You’re making good progress in linking your experiences to your observations. Consider how you can make these connections even clearer.</li>
+                    </ul>
+                </li>
+
+                <!-- Linkage: RO to AC Category -->
+                <li class="ro-ac" style="background-color: #FFEB9C;">
+                    <strong>Linkage: RO to AC</strong>
+                    <ul>
+                        <li style="color: green;" onclick="appendComment('You have effectively linked your observations (RO) to abstract lessons (AC), showing a logical progression in thought.')">You have effectively linked your observations (RO) to abstract lessons (AC), showing a logical progression in thought.</li>
+                        <li style="color: green;" onclick="appendComment('The transition from reflection (RO) to abstract conclusions (AC) is well-developed and insightful.')">The transition from reflection (RO) to abstract conclusions (AC) is well-developed and insightful.</li>
+                        <li style="color: red;" onclick="appendComment('The connection between your observations (RO) and the conclusions drawn (AC) could be more logically developed.')">The connection between your observations (RO) and the conclusions drawn (AC) could be more logically developed.</li>
+                        <li style="color: red;" onclick="appendComment('Your transition from reflection (RO) to abstract conclusions (AC) could benefit from more explicit linkage.')">Your transition from reflection (RO) to abstract conclusions (AC) could benefit from more explicit linkage.</li>
+                        <li style="color: blue;" onclick="appendComment('You’re connecting your reflections to broader concepts well. Keep refining these connections to enhance your understanding.')">You’re connecting your reflections to broader concepts well. Keep refining these connections to enhance your understanding.</li>
+                    </ul>
+                </li>
+
+                <!-- Linkage: AC to AE Category -->
+                <li class="ac-ae" style="background-color: #FFCCCB;">
+                    <strong>Linkage: AC to AE</strong>
+                    <ul>
+                        <li style="color: green;" onclick="appendComment('Your conclusions (AC) have been well translated into actionable plans (AE), indicating clear application of learning.')">Your conclusions (AC) have been well translated into actionable plans (AE), indicating clear application of learning.</li>
+                        <li style="color: green;" onclick="appendComment('The way you have linked your conclusions (AC) to actionable steps (AE) shows practical application of theory.')">The way you have linked your conclusions (AC) to actionable steps (AE) shows practical application of theory.</li>
+                        <li style="color: red;" onclick="appendComment('The transition from abstract lessons (AC) to active experimentation (AE) could be more explicit to enhance applicability.')">The transition from abstract lessons (AC) to active experimentation (AE) could be more explicit to enhance applicability.</li>
+                        <li style="color: red;" onclick="appendComment('Your plan for applying abstract concepts (AC) to practice (AE) is unclear and could benefit from further elaboration.')">Your plan for applying abstract concepts (AC) to practice (AE) is unclear and could benefit from further elaboration.</li>
+                        <li style="color: blue;" onclick="appendComment('You’re doing a great job of turning your abstract ideas into concrete actions. Consider how you can make these actions even more impactful.')">You’re doing a great job of turning your abstract ideas into concrete actions. Consider how you can make these actions even more impactful.</li>
+                    </ul>
+                </li>
+            </ul>
+        
+                <!-- Next Step -->
+                <li class="next-step" style="background-color: #DFF2BF;"><strong>Next Step</strong></li>
+                <ul>
+                    <li style="color: blue;" onclick="appendComment('For your next reflection, focus on building stronger connections between your experiences and the broader concepts.')">For your next reflection, focus on building stronger connections between your experiences and the broader concepts.</li>
+                    <li style="color: blue;" onclick="appendComment('In your upcoming reflections, try to incorporate more specific action plans for applying your learning.')">In your upcoming reflections, try to incorporate more specific action plans for applying your learning.</li>
+                </ul>
+        
+                <!-- Final Encouragement -->
+                <li class="encouragement" style="background-color: #FFEB9C;"><strong>Encouragement</strong></li>
+                <ul>
+                    <li style="color: green;" onclick="appendComment('You’re making great progress in your reflective writing. Keep it up! Your efforts are clearly paying off.')">You’re making great progress in your reflective writing. Keep it up! Your efforts are clearly paying off.</li>
+                    <li style="color: green;" onclick="appendComment('Your dedication to improving your reflection skills is commendable. Keep pushing forward!')">Your dedication to improving your reflection skills is commendable. Keep pushing forward!</li>
+                </ul>
             </ul>
         </div>
+        
+        
+        
         <div class="comment-box">
             <h3>Teacher's Comments
                 <span class="hint-icon" onclick="toggleHint('comment-hint')">?</span>
@@ -338,14 +590,14 @@
         labels: ['Recursion', 'Connection of EL processes', 'Class Engagement', 'Abstraction', 'Verbalization of EL process'],
         datasets: [
             {
-                label: 'Teacher Evaluation',
+                label: 'System\'s Evaluation',
                 data: weeks[currentWeekIndex].radarData,
                 backgroundColor: 'rgba(0, 123, 255, 0.2)',
                 borderColor: 'rgba(0, 123, 255, 1)',
                 borderWidth: 1
             },
             {
-                label: 'Student Self-Evaluation',
+                label: 'Learner\'s Self-Evaluation',
                 data: weeks[currentWeekIndex].radarSelfEval,
                 backgroundColor: 'rgba(255, 193, 7, 0.2)',
                 borderColor: 'rgba(255, 193, 7, 1)',
@@ -441,6 +693,54 @@
     function appendComment(comment) {
         const textarea = document.getElementById('teacher-comments');
         textarea.value += comment + " ";
+    }
+    function adjustAbstraction() {
+        document.getElementById('adjust-abstraction').style.display = 'block';
+    }
+
+    function submitAbstractionAdjustment() {
+        const newScore = document.getElementById('new-abstraction-score').value;
+        if (newScore) {
+            document.getElementById('system-abstraction-score').innerText = newScore;
+            alert("New abstraction score submitted: " + newScore);
+            document.getElementById('adjust-abstraction').style.display = 'none';
+        } else {
+            alert("Please enter a valid score before submitting.");
+        }
+    }
+
+    function adjustConnection() {
+        document.getElementById('adjust-connection').style.display = 'block';
+    }
+
+    function submitConnectionAdjustment() {
+        const newScore = document.getElementById('new-connection-score').value;
+        if (newScore) {
+            document.getElementById('system-connection-score').innerText = newScore;
+            alert("New connection score submitted: " + newScore);
+            document.getElementById('adjust-connection').style.display = 'none';
+        } else {
+            alert("Please enter a valid score before submitting.");
+        }
+    }
+
+    function adjustEvaluation() {
+        document.getElementById('adjust-comment').style.display = 'block';
+    }
+
+    function submitComment() {
+        const comment = document.getElementById('mentor-comment').value;
+        if (comment) {
+            alert("Comment submitted: " + comment);
+            // You can add code here to handle the comment submission, e.g., send it to the server
+        } else {
+            alert("Please enter a comment before submitting.");
+        }
+    }
+
+    function confirmEvaluation() {
+        alert("Evaluation confirmed. No further discussion needed.");
+        // Code to handle the confirmation action
     }
 </script>
 
